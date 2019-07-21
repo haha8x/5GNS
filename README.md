@@ -116,6 +116,61 @@ sudo su stack
 ```
 Drink a cup of tea and wait then you will have the OpenStack and OpenDayLight installed on your machine. The Compute node just need to repeat the same
 
+# Install OSM Release SIX
+
+## Requirement
+
+MINIMUM: 2 CPUs, 4 GB RAM, 20GB disk and a single interface with Internet access
+RECOMMENDED: 2 CPUs, 8 GB RAM, 40GB disk and a single interface with Internet access
+Base image: Ubuntu16.04 (64-bit variant required)
+```
+wget https://osm-download.etsi.org/ftp/osm-6.0-six/install_osm.sh
+chmod +x install_osm.sh
+./install_osm.sh --elk_stack --pm_stack --vimemu
+```
+You will be asked if you want to proceed with the installation and configuration of LXD, juju, docker CE and the initialization of a local docker swarm, as pre-requirements. Please answer "y".
+
+Then, some dialog messages related to LXD configuration will be shown. This is what you have to answer:
+```
+Do you want to configure the LXD bridge? Yes
+Do you want to setup an IPv4 subnet? Yes
+<< Default values apply for next questions >>
+Do you want to setup an IPv6 subnet? No
+```
+
+# Install OpenVIM
+## Requirement
+1 vCPU (2 recommended)
+4 GB RAM (4 GB are required to run OpenDaylight controller; if the ODL controller runs outside the VM, 2 GB RAM are enough)
+40 GB disk
+3 network interfaces to:
+OSM network (to interact with RO)
+DC intfrastructure network (to interact with the compute servers and switches)
+Telco/VNF management network (to provide IP addresses via DHCP to the VNFs)
+Base image: ubuntu-16.04-server-amd64
+
+## Installation
+```
+wget -O install-openvim.sh "https://osm.etsi.org/gitweb/?p=osm/openvim.git;a=blob_plain;f=scripts/install-openvim.sh;hb=1ff6c02ecff38378a4d7366e223cefd30670602e"
+chmod +x install-openvim.sh
+sudo ./install-openvim.sh -q   # --help  for help on options
+# NOTE: you can provide optionally the admin user (normally 'root') and password of the database.
+```
+Once installed, manage it with sudo service osm-openvim start|stop|restart
+Logs are at /var/log/osm/openvim.log
+Configuration file is at /etc/osm/openvimd.cfg
+Thre is a CLI client called openvim. Type "openvim config" to see the configuration bash variables
+
+## Openflow controller
+For normal or OF only openvim modes you will need a openflow controller. The following openflow controllers are supported:
+Floodlight version 0.90
+```
+git clone https://github.com/nfvlabs/openvim.git
+sudo openvim/scripts/install-floodlight.sh
+service-floodlight start
+```
+
+
 # Troubleshoot
 
 ## Tenant not allow to net-create with provider:physical_network
