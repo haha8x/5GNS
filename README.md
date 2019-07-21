@@ -2,7 +2,7 @@
 
 ## Labs, Workshops, and Documentation
 
-* [lab0](/lab0/README.md) - Deploy DevStack and a Juniper router and setup a BGP session between them
+* [lab0](/lab0/README.md) - Deploy DevStack and a Juniper router and setup a BGP session between them forked from idx-labs/openstack-network-slicing
 
 ## Links
 
@@ -10,13 +10,13 @@
 * [NGMN - Network Slicing](https://www.ngmn.org/fileadmin/user_upload/160113_Network_Slicing_v1_0.pdf)
 
 
-# Guide how to setup Openstack Ocata and Open Day Light using devstack
+# setup Openstack and Open Day Light using devstack
 # System requirements
 - Virtual machine on a real ESXi/KVM/Xen/etc. hypervisor, or a bare metal server with virtualization support
 - 8 GB of RAM (minimum)
 - 4 cores of CPU (minimum)
 - 100 GB of hard disk space (minimum)
-- An updated Ubuntu 16.04 LTS server
+- An updated Ubuntu 16.04 LTS Desktop
 - Static IP
 
 # Update and install dependencies
@@ -31,9 +31,11 @@ Once those commands have completed, you'll need to install git.
 ```
 sudo apt-get install git
 ```
-Next we need to install java 7 manualy
 ## Installing Oracle JDK
-In this section, you will need sudo privileges
+```
+sudo apt-get install openjdk-8-jdk
+```
+<!-- In this section, you will need sudo privileges
 ```
 sudo su
 ```
@@ -85,7 +87,7 @@ The output should look like this:
 java version "1.8.0_05"
 Java(TM) SE Runtime Environment (build 1.8.0_05-b13)
 Java HotSpot(TM) 64-Bit Server VM (build 25.5-b02, mixed mode)
-```    
+```     -->
 # Clone devstack
 We're going to use git to clone devstack. To do this, go back to your terminal window and issue the following two commands:
 
