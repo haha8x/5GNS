@@ -9,6 +9,8 @@
 * [Next Generation Mobile Networks Technical Documents](https://www.ngmn.org/publications/technical-deliverables.html)
 * [NGMN - Network Slicing](https://www.ngmn.org/fileadmin/user_upload/160113_Network_Slicing_v1_0.pdf)
 
+# Requirement
+- Openstack AIO or Cluster installed with OpenVSwitch
 
 # setup Openstack and Open Day Light using devstack
 # System requirements
@@ -113,3 +115,48 @@ sudo su stack
 /devstack/stack.sh
 ```
 Drink a cup of tea and wait then you will have the OpenStack and OpenDayLight installed on your machine. The Compute node just need to repeat the same
+
+# Troubleshoot
+
+## Tenant not allow to net-create with provider:physical_network
+Default policy for Neutron only allows admin to create networks with provider tag. You can edit /etc/neutron/policy.json to allow none admin users to create networks with provider tags.
+```
+sudo nano /etc/neutron/policy.json
+"create_network:provider:physical_network": "rule:admin_only"
+```
+
+## openstack network create: bad request (HTTP 400)
+```
+openstack network create mgmt --provider-network-type vlan --provider-physical-network physnet_em1 --provider-segment 500 --share
+```
+modified /opt/stack/neutron/etc/oslo-config-generator/openvswitch_agent.ini:
+```
+[ovs]
+bridge_mappings = physnet:br-ex
+```
+modified /etc/neutron/plugins/ml2/ml2_conf.ini:
+```
+[ml2_type_vlan]
+network_vlan_ranges = physnet
+```
+Then I rebooted the VM, ran source admin_openrc.sh (file downloaded from the Horizon UI where I logged in as admin) and the command for creating the network worked.
+
+## Got "/opt/stack/requirements/.venv/bin/pip’: No such file or directory" error installing devstack
+```
+virtualenv /opt/stack/requirements/.venv/
+```
+
+## /opt/stack/ permission
+```
+sudo chown -R stack:stack /opt/stack
+```
+
+## Clean devstack
+```
+cd devstack
+./unstack.sh
+./clean.sh
+cd ..
+rm -rf devstack
+sudo rm -rf /opt/stack
+```
