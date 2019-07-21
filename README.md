@@ -93,7 +93,7 @@ We're going to use git to clone devstack. To do this, go back to your terminal w
 
 ```
 cd /
-sudo git clone https://git.openstack.org/openstack-dev/devstack -b stable/ocata
+sudo git clone https://git.openstack.org/openstack-dev/devstack -b stable/stein
 ```
 Next, we have to create local config file. In this repo, I have included `local.conf` for serveral case, but the case we are going to use is `allinone` `multi-node`. Select local.conf file in `compute` or `control` folder and paste it to `local.conf` file in ubuntu server
 
