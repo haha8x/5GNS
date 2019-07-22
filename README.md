@@ -181,7 +181,7 @@ sudo nano /etc/neutron/policy.json
 
 ## openstack network create: bad request (HTTP 400)
 ```
-openstack network create mgmt --provider-network-type vlan --provider-physical-network physnet --provider-segment 500 --share
+openstack network create mgmt --provider-network-type vlan --provider-physical-network public --provider-segment 500 --share
 ```
 modified /opt/stack/neutron/etc/oslo-config-generator/openvswitch_agent.ini:
 ```
