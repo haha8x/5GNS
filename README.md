@@ -246,5 +246,10 @@ curl openstack_api_url
 ```
 
 ### docker no route to host
+Install OpenStack with WANIP
 
-
+### Upload Image
+```
+wget http://download.cirros-cloud.net/0.3.4/cirros-0.3.4-x86_64-disk.img
+openstack image create --file="./cirros-0.3.4-x86_64-disk.img" --container-format=bare --disk-format=qcow2 cirros034
+```
