@@ -9,11 +9,13 @@
 * [Next Generation Mobile Networks Technical Documents](https://www.ngmn.org/publications/technical-deliverables.html)
 * [NGMN - Network Slicing](https://www.ngmn.org/fileadmin/user_upload/160113_Network_Slicing_v1_0.pdf)
 
-# Requirement
+# OpenStack Install
+https://docs.openstack.org/devstack/latest/guides/neutron.html
+## Requirement
 - Openstack AIO or Cluster installed with OpenVSwitch
 
-# setup Openstack and Open Day Light using devstack
-# System requirements
+## setup Openstack and Open Day Light using devstack
+## System requirements
 - Virtual machine on a real ESXi/KVM/Xen/etc. hypervisor, or a bare metal server with virtualization support
 - 8 GB of RAM (minimum)
 - 4 cores of CPU (minimum)
@@ -21,22 +23,19 @@
 - An updated Ubuntu 16.04 LTS Desktop
 - Static IP
 
-# Update and install dependencies
+## Update and install dependencies
 First, you must update Ubuntu
 ```
-sudo apt-get update
-sudo apt-get upgrade
-sudo apt-get dist-upgrade
+sudo apt update
+sudo apt upgrade
+sudo apt dist-upgrade
 ```
 Once those commands have completed, you'll need to install git.
 
 ```
-sudo apt-get install git
+sudo apt install git openjdk-8-jdk -y
 ```
 ## Installing Oracle JDK
-```
-sudo apt-get install openjdk-8-jdk
-```
 <!-- In this section, you will need sudo privileges
 ```
 sudo su
@@ -167,7 +166,7 @@ Floodlight version 0.90
 ```
 git clone https://github.com/nfvlabs/openvim.git
 sudo openvim/scripts/install-floodlight.sh
-service-floodlight start
+./openvim/scripts/service-floodlight.sh start
 ```
 
 
@@ -182,7 +181,7 @@ sudo nano /etc/neutron/policy.json
 
 ## openstack network create: bad request (HTTP 400)
 ```
-openstack network create mgmt --provider-network-type vlan --provider-physical-network physnet_em1 --provider-segment 500 --share
+openstack network create mgmt --provider-network-type vlan --provider-physical-network physnet --provider-segment 500 --share
 ```
 modified /opt/stack/neutron/etc/oslo-config-generator/openvswitch_agent.ini:
 ```
@@ -215,3 +214,37 @@ cd ..
 rm -rf devstack
 sudo rm -rf /opt/stack
 ```
+
+## OpenStack Security Group Rule
+```
+openstack security group create OpenManoSecGr
+openstack security group rule create OpenManoSecGr --protocol tcp --dst-port 80:80 --remote-ip 0.0.0.0/0
+openstack security group rule create OpenManoSecGr --protocol tcp --dst-port 443:443 --remote-ip 0.0.0.0/0
+openstack security group rule create OpenManoSecGr --protocol tcp --dst-port 22:22 --remote-ip 0.0.0.0/0
+openstack security group rule create OpenManoSecGr --protocol icmp 
+openstack security group rule list OpenManoSecGr
+```
+## ABC
+Virtualized Infrastructure Manager (VIM)
+
+## Configure openstack for OSM (basic)
+### Guarantee that Openstack API endpoints are reachable from OSM (particularly from RO container)
+In order to debug potential issues with the connection, in the case of an OpenStack VIM, you can install the OpenStack client in the OSM VM and run some basic tests. I.e.:
+```
+# Install the OpenStack client
+sudo apt-get install python-openstackclient
+# Load your OpenStack credentials. Download admin-openrc.sh from horizon
+source admin-openrc.sh
+# Test if the VIM API is operational with a simple command. For instance:
+openstack image list
+```
+If the openstack client works, then make sure that you can reach the VIM from the RO docker:
+```
+docker container ls | grep -i osm_ro
+docker exec -it osm_ro.1.xxxxx bash
+curl openstack_api_url
+```
+
+### docker no route to host
+
+

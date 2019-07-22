@@ -35,7 +35,8 @@ Q_ML2_PLUGIN_MECHANISM_DRIVERS=openvswitch
 Q_ML2_PLUGIN_TYPE_DRIVERS=vlan,flat,local
 
 ## Additional plugins
-enable_plugin neutron git://git.openstack.org/openstack/neutron.git
+#enable_plugin neutron http://git.openstack.org/openstack/neutron.git
+enable_plugin neutron https://opendev.org/openstack/neutron.git
 
 ## Configure filters
 [[post-config|$NOVA_CONF]]
